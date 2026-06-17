@@ -4,138 +4,88 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import { motion } from "framer-motion";
-import { Globe, UserPlus, FileText, Home as HomeIcon, MessageCircle, LogIn, ChevronRight } from "lucide-react";
-import { SiWhatsapp, SiInstagram, SiX } from "react-icons/si";
-import { FaLinkedinIn } from "react-icons/fa6";
+import { MoreVertical } from "lucide-react";
+import { SiInstagram, SiX, SiFacebook } from "react-icons/si";
 
 const queryClient = new QueryClient();
 
 const links = [
-  {
-    title: "Visit Website",
-    url: "https://joinajar.com",
-    icon: Globe,
-    primary: true,
-  },
-  {
-    title: "Get Started / Create Account",
-    url: "https://joinajar.com",
-    icon: UserPlus,
-  },
-  {
-    title: "Pricing & Plans",
-    url: "https://joinajar.com/pricing",
-    icon: FileText,
-  },
-  {
-    title: "For Landlords (ملاك العقار)",
-    url: "https://joinajar.com",
-    icon: HomeIcon,
-  },
-  {
-    title: "Chat on WhatsApp",
-    url: "https://wa.me/96522270156",
-    icon: MessageCircle,
-  },
-  {
-    title: "Log In",
-    url: "https://joinajar.com",
-    icon: LogIn,
-  },
+  { title: "Ajar Property Management Website", url: "https://joinajar.com/" },
+  { title: "Ajar Listing", url: "https://listing.joinajar.com/ar/kw" },
+  { title: "Facebook", url: "https://www.facebook.com/joinajar" },
+  { title: "Instagram", url: "https://www.instagram.com/joinajar" },
+  { title: "LinkedIn", url: "https://linkedin.com/company/joinajar/" },
+  { title: "X", url: "https://x.com/joinajar" },
 ];
 
 const socials = [
-  { icon: SiWhatsapp, url: "https://wa.me/96522270156", label: "WhatsApp" },
-  { icon: SiInstagram, url: "https://instagram.com/joinajar", label: "Instagram" },
-  { icon: SiX, url: "https://twitter.com/joinajar", label: "X" },
-  { icon: FaLinkedinIn, url: "https://linkedin.com/company/joinajar", label: "LinkedIn" },
+  { icon: SiInstagram, url: "https://www.instagram.com/joinajar", label: "Instagram" },
+  { icon: SiX, url: "https://x.com/joinajar", label: "X" },
+  { icon: SiFacebook, url: "https://www.facebook.com/joinajar", label: "Facebook" },
 ];
 
 function Home() {
   return (
-    <div className="min-h-[100dvh] w-full flex flex-col items-center py-12 px-4 relative overflow-hidden bg-background">
-      {/* Ambient glowing background */}
-      <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-r from-[hsl(165,83%,74%,0.15)] via-[hsl(240,100%,47%,0.1)] to-[hsl(280,100%,60%,0.1)] blur-[100px] rounded-full pointer-events-none" />
-
-      <div className="w-full max-w-md relative z-10 flex flex-col items-center">
-        
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-10 flex flex-col items-center"
+    <div className="min-h-[100dvh] w-full flex justify-center" style={{ backgroundColor: "#E9EDF0" }}>
+      <div className="w-full max-w-[680px] px-5 pt-12 pb-16 flex flex-col items-center">
+        {/* Avatar */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+          className="w-24 h-24 rounded-full flex items-center justify-center shadow-sm"
+          style={{ backgroundColor: "#033D7A" }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-[#033D7A] mb-2" style={{ letterSpacing: "-0.03em" }}>
+          <span className="text-white text-3xl font-bold tracking-tight" style={{ letterSpacing: "-0.02em" }}>
             Ajar
-            <span className="opacity-40 ml-2 font-normal text-3xl">أجار</span>
-          </h1>
-          <p className="text-[#27282A] text-opacity-80 font-medium">Smart rental & property management</p>
-          <p className="text-[#27282A] text-opacity-60 text-sm mt-1">حلول للعقارات الإيجارية</p>
+          </span>
         </motion.div>
 
-        {/* Links */}
-        <div className="w-full space-y-3 mb-12">
-          {links.map((link, i) => (
-            <motion.a
-              key={link.title}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease: [0.25, 0.1, 0.25, 1.0] }}
-              whileHover={{ scale: 1.02, translateY: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className={`flex items-center p-4 rounded-2xl transition-all duration-300 shadow-sm hover:shadow-md border ${
-                link.primary 
-                  ? "bg-[#85F5D9] border-transparent text-[#033D7A]" 
-                  : "bg-white border-black/5 text-[#27282A] hover:border-[#0000EE]/30"
-              }`}
-            >
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full mr-4 ${
-                link.primary ? "bg-white/40 text-[#033D7A]" : "bg-gray-50 text-[#0000EE]"
-              }`}>
-                <link.icon className="w-5 h-5" />
-              </div>
-              <span className="font-semibold text-[15px] flex-grow">{link.title}</span>
-              <ChevronRight className={`w-5 h-5 opacity-50 ${link.primary ? "text-[#033D7A]" : "text-gray-400"}`} />
-            </motion.a>
-          ))}
-        </div>
+        {/* Title */}
+        <h1 className="mt-4 text-xl font-bold text-[#101113]">Join_Ajar</h1>
 
-        {/* Socials */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="flex justify-center gap-4 mb-8"
-        >
+        {/* Bio */}
+        <p className="mt-1.5 text-sm text-[#101113]/80 text-center max-w-[340px] leading-relaxed" dir="rtl">
+          أجار | إدارة العقارات بسهولة 💼 أدر كل شيء في مكان واحد
+        </p>
+
+        {/* Social row */}
+        <div className="mt-4 flex items-center gap-5">
           {socials.map((social) => (
             <a
               key={social.label}
               href={social.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 rounded-full bg-white shadow-sm border border-black/5 flex items-center justify-center text-[#033D7A] hover:text-[#0000EE] hover:scale-110 hover:-translate-y-1 transition-all duration-300"
               aria-label={social.label}
+              className="text-[#101113] hover:opacity-60 transition-opacity"
             >
-              <social.icon className="w-5 h-5" />
+              <social.icon className="w-6 h-6" />
             </a>
           ))}
-        </motion.div>
-        
-        {/* Footer */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="text-center"
-        >
-          <a href="https://joinajar.com" target="_blank" rel="noopener noreferrer" className="text-xs text-[#27282A]/50 hover:text-[#0000EE] transition-colors">
-            joinajar.com
-          </a>
-        </motion.div>
+        </div>
+
+        {/* Link buttons */}
+        <div className="mt-8 w-full flex flex-col gap-4">
+          {links.map((link, i) => (
+            <motion.a
+              key={link.title}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.05 + i * 0.05, ease: "easeOut" }}
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              className="relative flex items-center justify-center min-h-[58px] w-full rounded-xl px-12 py-4 text-white font-semibold text-[15px] text-center shadow-[0_1px_2px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_2px_8px_rgba(0,0,0,0.18)]"
+              style={{ backgroundColor: "#1668FF" }}
+            >
+              <span className="px-2">{link.title}</span>
+              <MoreVertical className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 opacity-90" />
+            </motion.a>
+          ))}
+        </div>
       </div>
     </div>
   );
