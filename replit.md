@@ -1,6 +1,6 @@
-# [Project name]
+# Ajar Links
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A single-page "link in bio" hub for Ajar (joinajar.com) that collects all of the brand's important links — website, sign-up, pricing, WhatsApp, and socials — in one tappable, on-brand page.
 
 ## Run & Operate
 
