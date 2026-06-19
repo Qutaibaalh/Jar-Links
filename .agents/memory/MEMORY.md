@@ -1,0 +1,2 @@
+- [Analytics passcode transport](analytics-passcode.md) — /stats passcode is a query param by deliberate tradeoff; proxy-log leak risk is the open follow-up.
+- [Orval codegen quirks](orval-codegen.md) — request-body schema names must not be `<OperationId>Body`; rerun codegen after any openapi.yaml edit.

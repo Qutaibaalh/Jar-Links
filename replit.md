@@ -22,15 +22,27 @@ A single-page "link in bio" hub for Ajar (joinajar.com) that collects all of the
 
 ## Where things live
 
-_Populate as you build — short repo map plus pointers to the source-of-truth file for DB schema, API contracts, theme files, etc._
+- API contract (source of truth): `lib/api-spec/openapi.yaml` → run codegen to regenerate hooks/schemas
+- Generated client hooks: `lib/api-client-react/src/generated/` (e.g. `useGetStats`, `trackEvent`)
+- Generated Zod schemas (server validation): `lib/api-zod/src/generated/`
+- DB schema: `lib/db/src/schema/` (`analytics-events.ts` for analytics)
+- API routes: `artifacts/api-server/src/routes/` (`events.ts`, `stats.ts`)
+- Public link page + analytics wiring: `artifacts/links/src/App.tsx`
+- Client tracking helper: `artifacts/links/src/lib/analytics.ts`
+- Analytics dashboard: `artifacts/links/src/pages/dashboard.tsx` (route `/stats`)
 
 ## Architecture decisions
 
-_Populate as you build — non-obvious choices a reader couldn't infer from the code (3-5 bullets)._
+- Analytics events (`visit`, `click`) are written to `analytics_events`. `referrerDomain` is derived server-side from the full referrer; `userAgent` is captured server-side from the request, not trusted from the client.
+- Tracking is fire-and-forget on the client (errors swallowed) so it never blocks a link click or page render.
+- The `/stats` dashboard is gated by `ANALYTICS_ADMIN_PASSCODE` (env secret), checked server-side; there is no user auth system.
+- Visitor uniqueness is approximated by a client-generated UUID stored in `localStorage`.
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Public "link in bio" page for Ajar with the brand's key links and socials.
+- Automatic analytics: every page visit and link click is recorded.
+- Private passcode-protected dashboard at `/stats` showing profile visits, unique visitors, total clicks, per-link clicks + CTR, traffic sources (referrer domain), and UTM campaigns, filterable by 7d / 30d / all time.
 
 ## User preferences
 
@@ -38,7 +50,9 @@ _Populate as you build — explicit user instructions worth remembering across s
 
 ## Gotchas
 
-_Populate as you build — sharp edges, "always run X before Y" rules._
+- The public home page (`/`) design must stay visually identical when adding features (Linktree-style: `#1668FF` buttons, `#033D7A` avatar, `#E9EDF0` background).
+- After editing `lib/api-spec/openapi.yaml`, always run `pnpm --filter @workspace/api-spec run codegen` before typechecking server/client.
+- Generated request-body component names must NOT be `<OperationId>Body` — use entity names (e.g. `EventInput`) in the OpenAPI spec.
 
 ## Pointers
 
