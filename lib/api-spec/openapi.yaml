@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: analytics
+    description: Link analytics operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,63 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /events:
+    post:
+      operationId: trackEvent
+      tags: [analytics]
+      summary: Record an analytics event
+      description: Records a profile visit or a link click. Accepts anonymous traffic.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        "201":
+          description: Recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrackResult"
+        "400":
+          description: Invalid event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /stats:
+    get:
+      operationId: getStats
+      tags: [analytics]
+      summary: Aggregated analytics (protected)
+      description: Returns aggregated analytics metrics for the given date range. Requires the admin passcode.
+      parameters:
+        - name: range
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ["7d", "30d", "all"]
+            default: "30d"
+        - name: passcode
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +92,106 @@ components:
           type: string
       required:
         - status
-
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+    EventInput:
+      type: object
+      required:
+        - type
+        - visitorId
+      properties:
+        type:
+          type: string
+          enum: ["visit", "click"]
+        visitorId:
+          type: string
+          minLength: 1
+        linkTitle:
+          type: ["string", "null"]
+        linkUrl:
+          type: ["string", "null"]
+        referrer:
+          type: ["string", "null"]
+        utmSource:
+          type: ["string", "null"]
+        utmMedium:
+          type: ["string", "null"]
+        utmCampaign:
+          type: ["string", "null"]
+    TrackResult:
+      type: object
+      required:
+        - ok
+      properties:
+        ok:
+          type: boolean
+    LinkStat:
+      type: object
+      required:
+        - title
+        - clicks
+        - ctr
+      properties:
+        title:
+          type: string
+        url:
+          type: ["string", "null"]
+        clicks:
+          type: integer
+        ctr:
+          type: number
+    SourceStat:
+      type: object
+      required:
+        - source
+        - visits
+      properties:
+        source:
+          type: string
+        visits:
+          type: integer
+    CampaignStat:
+      type: object
+      required:
+        - campaign
+        - visits
+      properties:
+        campaign:
+          type: string
+        visits:
+          type: integer
+    StatsResponse:
+      type: object
+      required:
+        - totalVisits
+        - uniqueVisitors
+        - totalClicks
+        - links
+        - trafficSources
+        - campaigns
+      properties:
+        rangeDays:
+          type: ["integer", "null"]
+        totalVisits:
+          type: integer
+        uniqueVisitors:
+          type: integer
+        totalClicks:
+          type: integer
+        links:
+          type: array
+          items:
+            $ref: "#/components/schemas/LinkStat"
+        trafficSources:
+          type: array
+          items:
+            $ref: "#/components/schemas/SourceStat"
+        campaigns:
+          type: array
+          items:
+            $ref: "#/components/schemas/CampaignStat"

@@ -1,11 +1,14 @@
+import { useEffect } from "react";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import Dashboard from "@/pages/dashboard";
 import { motion } from "framer-motion";
 import { MoreVertical } from "lucide-react";
 import { SiInstagram, SiX, SiFacebook } from "react-icons/si";
+import { trackVisit, trackClick } from "@/lib/analytics";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +28,10 @@ const socials = [
 ];
 
 function Home() {
+  useEffect(() => {
+    trackVisit();
+  }, []);
+
   return (
     <div className="min-h-[100dvh] w-full flex justify-center" style={{ backgroundColor: "#E9EDF0" }}>
       <div className="w-full max-w-[680px] px-5 pt-12 pb-16 flex flex-col items-center">
@@ -73,6 +80,7 @@ function Home() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackClick(link.title, link.url)}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.05 + i * 0.05, ease: "easeOut" }}
@@ -95,6 +103,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/stats" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
   );
